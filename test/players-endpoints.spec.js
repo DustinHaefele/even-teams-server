@@ -1,63 +1,78 @@
+/*global expect supertest */
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Players Endpoints', () =>{
+describe('Players Endpoints', () => {
   let db;
 
-  const {
-    testPlayers, 
-    testUsers,
-    testGroups
-  } = helpers.makeThingsFixtures();
+  const { testPlayers, testUsers, testGroups } = helpers.makeThingsFixtures();
 
-  before('make knex instance', ()=> {
+  before('make knex instance', () => {
     db = knex({
-      client:'pg',
+      client: 'pg',
       connection: process.env.TEST_DB_URL
     });
-    app.set('db',db);
+    app.set('db', db);
   });
-  after('disconnect from db',()=>db.destroy());
+  after('disconnect from db', () => db.destroy());
 
-  before('cleanup',()=>helpers.cleanTables(db));
+  before('cleanup', () => helpers.cleanTables(db));
 
-  afterEach('cleanup',()=>helpers.cleanTables(db));
+  afterEach('cleanup', () => helpers.cleanTables(db));
 
-  describe('GET /api/players',()=>{
-    beforeEach('seed users table',()=>{
+  describe('GET /api/players', () => {
+    beforeEach('seed users table', () => {
       return helpers.seedUsersTable(db, testUsers);
     });
-    beforeEach('seed groups table',()=>{
+    beforeEach('seed groups table', () => {
       return helpers.seedGroupsTable(db, testGroups);
     });
-    beforeEach('seed players table',()=>{
+    beforeEach('seed players table', () => {
       return helpers.seedPlayersTable(db, testPlayers);
     });
 
-    it('gets all players', ()=>{
+    it('gets all players', () => {
       return supertest(app)
         .get('/api/players')
         .expect(200, testPlayers);
-    });//it
+    }); //it
 
-    it('gets players with a given group id', () =>{
+    it('gets players with a given group id', () => {
       const groupId = testPlayers[0].group_id;
-      const expectedPlayers = testPlayers.filter(player => player.group_id === groupId);
+      const expectedPlayers = testPlayers.filter(
+        player => player.group_id === groupId
+      );
       return supertest(app)
         .get(`/api/players/${groupId}`)
         .expect(200, expectedPlayers);
     });
 
-    it('returns 400 and no group found if id doesn\'t exist', ()=>{
+    it("returns 400 and no group found if id doesn't exist", () => {
       const invalidId = 123;
       return supertest(app)
         .get(`/api/players/${invalidId}`)
-        .expect(400, {error: 'No group found'});
+        .expect(400, { error: 'No group found' });
     });
 
+    describe('POST /api/players', () => {
+      context('POST fails',()=>{
+        it('responds 400 and Invalid group if group_id isn\'t valid', ()=>{
+          const newPlayer = {
+            group_id: 123,
+            player_name: 'Test Player',
+            player_skill: 4
+          };
 
+          return supertest(app)
+            .post('/api/players')
+            .send(newPlayer)
+            .expect(400,{error: 'Invalid group'});
+        });
+      });//context POST FAILS
+      context('happy path',()=>{
 
-  });//describe api/players
-
-});//main describe
+      });//context happy path
+    });
+  }); //GET describe api/players
+}); //main describe

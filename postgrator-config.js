@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 require('dotenv').config();
 
 module.exports = {

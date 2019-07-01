@@ -108,7 +108,7 @@ function seedUsersTable(db, users) {
   return db('even_teams_users')
     .insert(users)
     .then(() =>
-      db.raw(`SELECT setval('even_teams_users_id_seq',?)`, [
+      db.raw('SELECT setval(\'even_teams_users_id_seq\',?)', [
         users[users.length - 1].id
       ])
     );
@@ -118,7 +118,7 @@ function seedPlayersTable(db, players) {
   return db('even_teams_players')
     .insert(players)
     .then(() =>
-      db.raw(`SELECT setval('even_teams_players_id_seq',?)`, [
+      db.raw('SELECT setval(\'even_teams_players_id_seq\',?)', [
         players[players.length - 1].id
       ])
     );
@@ -128,7 +128,7 @@ function seedGroupsTable(db, groups){
   return db('even_teams_groups')
     .insert(groups)
     .then(()=>{
-      db.raw(`SELECT setval('even_teams_groups_ib_seq',?)`,[
+      db.raw('SELECT setval(\'even_teams_groups_ib_seq\',?)',[
         groups[groups.length - 1].id
       ]);
     });

@@ -1,9 +1,11 @@
+/*global expect supertest */
+
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 const bcrypt = require('bcrypt');
 
-describe.only('User Endpoints', () => {
+describe('User Endpoints', () => {
   let db;
 
   const { testPlayers, testUsers, testGroups } = helpers.makeThingsFixtures();
@@ -34,7 +36,7 @@ describe.only('User Endpoints', () => {
         return helpers.seedPlayersTable(db, testPlayers);
       });
 
-      it("responds 400 and No user found when user_id doesn't exist", () => {
+      it('responds 400 and No user found when user_id doesn\'t exist', () => {
         const user_id = 123;
         return supertest(app)
           .get(`/api/users/${user_id}`)
@@ -72,24 +74,24 @@ describe.only('User Endpoints', () => {
           .expect(400, { error: 'Password must be less than 73 characters' });
       }); //it 400
 
-      it("responds 400 and Password can't start with a space", () => {
+      it('responds 400 and Password can\'t start with a space', () => {
         const { user_name, full_name, password } = testUsers[0];
         const newUser = { user_name, full_name, password };
         newUser.password = ' Password!2';
         return supertest(app)
           .post('/api/users/')
           .send(newUser)
-          .expect(400, { error: "Password can't start or end with a space" });
+          .expect(400, { error: 'Password can\'t start or end with a space' });
       }); //it 400
 
-      it("responds 400 and Password can't end with a space", () => {
+      it('responds 400 and Password can\'t end with a space', () => {
         const { user_name, full_name, password } = testUsers[0];
         const newUser = { user_name, full_name, password };
         newUser.password = 'Password!2 ';
         return supertest(app)
           .post('/api/users/')
           .send(newUser)
-          .expect(400, { error: "Password can't start or end with a space" });
+          .expect(400, { error: 'Password can\'t start or end with a space' });
       }); //it 400
 
       const badPasswords = [
@@ -113,8 +115,6 @@ describe.only('User Endpoints', () => {
             });
         }); //it
       }); //forEach
-
-      //forEach Regex checks here..
     }); //context has no data
     context('table has data', () => {
       beforeEach('seed users table', () => {
@@ -140,7 +140,17 @@ describe.only('User Endpoints', () => {
           .expect(400, { error: 'Username Already Exists' });
       });
     }); //context table has data
-    context('Happy Path', () => {
+    context.only('Happy Path', () => {
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
+      
       it('Happy Path', () => {
         const newUser = {
           password: 'ValidPass!1',
@@ -153,7 +163,7 @@ describe.only('User Endpoints', () => {
           .send(newUser)
           .expect(201)
           .expect(res => {
-            // expect(res.body).to.have.property('id');
+            //expect(res.body).to.have.property('id');
             expect(res.body.user_name).to.eql(newUser.user_name);
             expect(res.body.full_name).to.eql(newUser.full_name);
             expect(res.headers.location).to.eql(`/api/users/${res.body.id}`);

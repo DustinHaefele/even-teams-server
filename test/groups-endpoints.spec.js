@@ -1,3 +1,4 @@
+/*global expect supertest */
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
@@ -46,7 +47,7 @@ describe('Groups Endpoints', () => {
           .expect(200, expectedGroup);
       }); //it
 
-      it("responds 400 and no group found when group doesn't exist", () => {
+      it('responds 400 and no group found when group doesn\'t exist', () => {
         const group_id = 123;
         return supertest(app)
           .get(`/api/groups/${group_id}`)
@@ -85,5 +86,66 @@ describe('Groups Endpoints', () => {
           .expect(400, { error: 'No groups found' });
       });
     }); //context with data
-  }); //describe user id path
+  }); //describe GET user id path
+  describe.only('POST /api/groups',()=>{
+    context('table has data',()=>{
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
+
+      it('Responds 400 and User doesn\'t exist if user doesn\'t',()=>{
+        const newGroup =  {
+          user_id:123,
+          group_name: 'Test Group'
+        };
+        return supertest(app)
+          .post('/api/groups')
+          .send(newGroup)
+          .expect(400, {error:'User does not exist'});
+      });
+
+
+      
+    });//context
+    context('happy path',()=>{
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+
+      it('responds 201 and location and group info when posted',()=>{
+        const newGroup = {
+          group_name: 'Hogwarts Pickup Quidditch',
+          user_id: testUsers[0].id
+        };
+
+        return supertest(app)
+          .post('/api/groups')
+          .send(newGroup)
+          .expect(201)
+          .expect(res=>{
+            expect(res.body).to.have.property('id');
+            expect(res.body.group_name).to.eql(newGroup.group_name);
+            expect(res.body.user_id).to.eql(newGroup.user_id);
+            expect(res.headers.location).to.eql(`/api/groups/${res.body.id}`)
+          })
+          .expect(()=>{
+            db('even_teams_groups')
+              .select('*')
+              .where({user_id: newGroup.user_id})
+              .first()
+              .then(row=>{
+                expect(row.group_name).to.eql(newGroup.group_name);
+                expect(row.user_id).to.eql(newGroup.user_id);
+                expect(row).to.have.property('id');
+              });
+          });
+      });//it happy path
+    });//context happy path
+  });//describe POST path
 }); //main describe
