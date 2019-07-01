@@ -17,12 +17,14 @@ PlayersRouter.route('/').get((req, res, next) => {
 PlayersRouter
   .route('/:group_id')
   .get((req,res,next)=>{
-    PlayersService.getPlayersByGroup(req.app.get('db'), req.params.group_id)
+    return PlayersService.getPlayersByGroup(req.app.get('db'), req.params.group_id)
       .then(players=>{
         if(!players){
           return res.status(400).send({error: 'No Players Found'});
         }
         res.json(players);
-      });
+      }).catch(next);
   });
+
+  module.exports = PlayersRouter;
 
