@@ -39,7 +39,24 @@ describe.only('Players Endpoints', () =>{
       return supertest(app)
         .get('/api/players')
         .expect(200, testPlayers);
+    });//it
+
+    it('gets players with a given group id', () =>{
+      const groupId = testPlayers[0].group_id;
+      const expectedPlayers = testPlayers.filter(player => player.group_id === groupId);
+      return supertest(app)
+        .get(`/api/players/${groupId}`)
+        .expect(200, expectedPlayers);
     });
+
+    it('returns 400 and no group found if id doesn\'t exist', ()=>{
+      const invalidId = 123;
+      return supertest(app)
+        .get(`/api/players/${invalidId}`)
+        .expect(400, {error: 'No group found'});
+    });
+
+
 
   });//describe api/players
 
