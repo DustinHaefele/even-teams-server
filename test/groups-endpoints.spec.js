@@ -87,7 +87,7 @@ describe('Groups Endpoints', () => {
       });
     }); //context with data
   }); //describe GET user id path
-  describe.only('POST /api/groups',()=>{
+  describe('POST /api/groups',()=>{
     context('table has data',()=>{
       beforeEach('seed users table', () => {
         return helpers.seedUsersTable(db, testUsers);
@@ -134,10 +134,10 @@ describe('Groups Endpoints', () => {
             expect(res.body.user_id).to.eql(newGroup.user_id);
             expect(res.headers.location).to.eql(`/api/groups/${res.body.id}`)
           })
-          .expect(()=>{
+          .expect(res=>{
             db('even_teams_groups')
               .select('*')
-              .where({user_id: newGroup.user_id})
+              .where({id: res.body.id})
               .first()
               .then(row=>{
                 expect(row.group_name).to.eql(newGroup.group_name);

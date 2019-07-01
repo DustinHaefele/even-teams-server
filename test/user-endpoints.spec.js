@@ -140,7 +140,7 @@ describe('User Endpoints', () => {
           .expect(400, { error: 'Username Already Exists' });
       });
     }); //context table has data
-    context.only('Happy Path', () => {
+    context('Happy Path', () => {
       beforeEach('seed users table', () => {
         return helpers.seedUsersTable(db, testUsers);
       });

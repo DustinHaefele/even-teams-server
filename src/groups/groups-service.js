@@ -25,8 +25,8 @@ const GroupsService = {
     return db('even_teams_users')
       .select('*')
       .where({id: user_id})
-      .first()
-      .then(user => !!user);
+      .first();
+      // .then(user => !!user);
   }
 };
 

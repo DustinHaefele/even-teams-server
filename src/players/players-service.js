@@ -10,6 +10,19 @@ const playersService = {
     return db('even_teams_players')
       .select('*')
       .where({group_id});
+  },
+  insertPlayer(db, player) {
+    return db('even_teams_players')
+      .insert(player)
+      .returning('*')
+      .then(players=>players[0]);
+  },
+  validateGroup(db, group_id){
+    return db('even_teams_groups')
+      .select('*')
+      .where({id: group_id})
+      .first()
+      .then(group=>!!group);
   }
 
 };

@@ -55,24 +55,63 @@ describe('Players Endpoints', () => {
         .expect(400, { error: 'No group found' });
     });
 
-    describe('POST /api/players', () => {
-      context('POST fails',()=>{
-        it('responds 400 and Invalid group if group_id isn\'t valid', ()=>{
-          const newPlayer = {
-            group_id: 123,
-            player_name: 'Test Player',
-            player_skill: 4
-          };
-
-          return supertest(app)
-            .post('/api/players')
-            .send(newPlayer)
-            .expect(400,{error: 'Invalid group'});
-        });
-      });//context POST FAILS
-      context('happy path',()=>{
-
-      });//context happy path
-    });
+   
   }); //GET describe api/players
+  describe('POST /api/players', () => {
+    context('POST fails',()=>{
+      it('responds 400 and Invalid group if group_id isn\'t valid', ()=>{
+        const newPlayer = {
+          group_id: 123,
+          player_name: 'Test Player',
+          player_skill: 4
+        };
+
+        return supertest(app)
+          .post('/api/players')
+          .send(newPlayer)
+          .expect(400,{error: 'Group not found'});
+      });
+    });//context POST FAILS
+    context('happy path',()=>{
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
+
+      it('responds 201 and location and group info when posted',()=>{
+        const newPlayer = {
+          player_name: 'Harry Potter',
+          player_skill: 5,
+          group_id: testGroups[0].id
+        };
+
+        return supertest(app)
+          .post('/api/players')
+          .send(newPlayer)
+          .expect(201)
+          .expect(res=>{
+            expect(res.body).to.have.property('id');
+            expect(res.body.player_name).to.eql(newPlayer.player_name);
+            expect(res.body.group_id).to.eql(newPlayer.group_id);
+            expect(res.headers.location).to.eql(`/api/players/${res.body.id}`)
+          })
+          .expect(res=>{
+            db('even_teams_players')
+              .select('*')
+              .where({id: res.body.id})
+              .first()
+              .then(row=>{
+                expect(row.player_name).to.eql(newPlayer.player_name);
+                expect(row.group_id).to.eql(newPlayer.group_id);
+                expect(row).to.have.property('id');
+              });
+          });
+      });//it happy path
+    });//context happy path
+  });//Describe POST /api/player
 }); //main describe
