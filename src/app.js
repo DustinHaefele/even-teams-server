@@ -5,7 +5,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const PlayersRouter = require('./players/players-router');
-
+const GroupsRouter = require('./groups/groups-router');
+const UsersRouter = require('./users/users-router');
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(cors());
 app.use(helmet());
 
 app.use('/api/players', PlayersRouter);
+app.use('/api/groups', GroupsRouter);
+app.use('/api/users', UsersRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');

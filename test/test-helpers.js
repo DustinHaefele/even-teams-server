@@ -41,6 +41,16 @@ function makeGroupsArray() {
       user_id: 1
     },
     {
+      id: 3,
+      group_name: 'test-group-4',
+      user_id: 1
+    },
+    {
+      id: 4,
+      group_name: 'test-group-3',
+      user_id: 1
+    },
+    {
       id: 2,
       group_name: 'test-group-2',
       user_id: 2
@@ -61,6 +71,18 @@ function makeUsersArray() {
       user_name: 'user-name-test-2',
       password: 'password',
       full_name: 'Test FullName2'
+    },
+    {
+      id: 3,
+      user_name: 'user-name-test-3',
+      password: 'password',
+      full_name: 'Test FullName3'
+    },
+    {
+      id: 4,
+      user_name: 'user-name-test-4',
+      password: 'password',
+      full_name: 'Test FullName4'
     }
   ];
 }
