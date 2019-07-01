@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+const xss = require('xss');
 
 const REGEX_PASS = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
@@ -28,12 +30,32 @@ const UsersService = {
   },
 
   validateUserName(db, user_name) {
-    db('even_teams_users')
+    return db('even_teams_users')
       .where({user_name})
       .first()
       .then(userInDb => !!userInDb);
   },
 
+  hashPassword(password){
+    return bcrypt.hash(password, 10);
+  },
+
+  serializeUser(user){
+    const {user_name, password, full_name} = user;
+
+    return {
+      user_name: xss(user_name),
+      full_name: xss(full_name),
+      password,
+    };
+  },
+
+  insertUser(db, user){
+    return db('even_teams_users')
+      .insert(user)
+      .returning('*')
+      .then(users=>users[0]);
+  }
 };
 
 module.exports = UsersService;

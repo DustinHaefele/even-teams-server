@@ -1,6 +1,7 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const bcrypt = require('bcrypt');
 
 describe.only('User Endpoints', () => {
   let db;
@@ -110,10 +111,69 @@ describe.only('User Endpoints', () => {
               error:
                 'password needs 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 number'
             });
-        });//it
-      });//forEach
+        }); //it
+      }); //forEach
 
       //forEach Regex checks here..
     }); //context has no data
+    context('table has data', () => {
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
+
+      it('responds 400 and Username already exists if it does', () => {
+        const newUser = {
+          password: 'ValidPass!1',
+          full_name: 'Test User',
+          user_name: testUsers[0].user_name
+        };
+
+        return supertest(app)
+          .post('/api/users')
+          .send(newUser)
+          .expect(400, { error: 'Username Already Exists' });
+      });
+    }); //context table has data
+    context('Happy Path', () => {
+      it('Happy Path', () => {
+        const newUser = {
+          password: 'ValidPass!1',
+          full_name: 'Harry Potter',
+          user_name: 'HarryPotter'
+        };
+
+        return supertest(app)
+          .post('/api/users')
+          .send(newUser)
+          .expect(201)
+          .expect(res => {
+            // expect(res.body).to.have.property('id');
+            expect(res.body.user_name).to.eql(newUser.user_name);
+            expect(res.body.full_name).to.eql(newUser.full_name);
+            expect(res.headers.location).to.eql(`/api/users/${res.body.id}`);
+          })
+          .expect(() => {
+            db('even_teams_users')
+              .select('*')
+              .where({ user_name: newUser.user_name })
+              .first()
+              .then(user => {
+                expect(user.user_name).to.eql(newUser.user_name);
+                expect(user.full_name).to.eql(newUser.full_name);
+                expect(user).to.have.property('id');
+                return bcrypt.compare(newUser.password, user.password);
+              })
+              .then(match => {
+                expect(match).to.be.true;
+              });
+          });
+      }); //it happy path
+    }); //context happy path
   }); //describe POST path
 }); //main describe

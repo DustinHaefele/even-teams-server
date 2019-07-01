@@ -1,41 +1,50 @@
 const express = require('express');
+const path = require('path');
 const UsersService = require('./users-service');
 const UsersRouter = express.Router();
 
 const jsonBodyParser = express.json();
 
-UsersRouter
-  .post('/', jsonBodyParser, (req,res,next)=>{
-    const {user_name, full_name, password} = req.body;
-    const user = {user_name, full_name, password};
+UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
+  const { user_name, full_name, password } = req.body;
+  const user = { user_name, full_name, password };
 
-    const passError = UsersService.validatePassword(password);
+  const passError = UsersService.validatePassword(password);
 
-    if(passError){
-      return res.status(400).json({error: passError});
-    }
+  if (passError) {
+    return res.status(400).json({ error: passError });
+  }
 
-    UsersService.validateUserName(req.app.get('db'), user_name)
-      .then(userInDb =>{
-        if(userInDb){
-          return res.status(400).json({error: 'Username Already Exists'});
-        }
-        res.send('ok');
+  UsersService.validateUserName(req.app.get('db'), user_name)
+    .then(userInDb => {
+      if (userInDb) {
+        return res.status(400).json({ error: 'Username Already Exists' });
+      }
+      return UsersService.hashPassword(password).then(hashPass => {
+        user.password = hashPass;
+
+        return UsersService.insertUser(req.app.get('db'), user).then(insertedUser => {
+          res
+            .status(201)
+            .location(path.posix.join(req.originalUrl, `/${user.id}`))
+            .json(UsersService.serializeUser(insertedUser));
+        });
       });
-  });
 
-UsersRouter
-  .route('/:user_id')
+    }).catch(next);
+});
+
+UsersRouter.route('/:user_id')
   //might want to delete this route.
-  .get((req,res,next)=>{
-    UsersService.getUserById(req.app.get('db'),req.params.user_id)
-      .then(user =>{
-        if(!user){
-          return res.status(400).json({error: 'No user found'});
+  .get((req, res, next) => {
+    UsersService.getUserById(req.app.get('db'), req.params.user_id)
+      .then(user => {
+        if (!user) {
+          return res.status(400).json({ error: 'No user found' });
         }
-        res.json(user);
-      }).catch(next);
+        res.status(200).json(user);
+      })
+      .catch(next);
   });
 
 module.exports = UsersRouter;
-
