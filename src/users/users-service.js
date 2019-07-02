@@ -41,12 +41,13 @@ const UsersService = {
   },
 
   serializeUser(user){
-    const {user_name, password, full_name} = user;
+    const {user_name, password, full_name, id} = user;
 
     return {
       user_name: xss(user_name),
       full_name: xss(full_name),
       password,
+      id,
     };
   },
 

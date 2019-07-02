@@ -24,9 +24,14 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
         user.password = hashPass;
 
         return UsersService.insertUser(req.app.get('db'), user).then(insertedUser => {
+          
+          if (!insertedUser) {
+            return res.status(400).json({ error: 'Somthing went wrong' });
+          }
+
           res
             .status(201)
-            .location(path.posix.join(req.originalUrl, `/${user.id}`))
+            .location(path.posix.join(req.originalUrl, `/${insertedUser.id}`))
             .json(UsersService.serializeUser(insertedUser));
         });
       });

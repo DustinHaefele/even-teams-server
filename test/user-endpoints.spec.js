@@ -163,7 +163,9 @@ describe('User Endpoints', () => {
           .send(newUser)
           .expect(201)
           .expect(res => {
-            //expect(res.body).to.have.property('id');
+            console.log(res.body);
+            console.log(res.headers.location);
+            expect(res.body).to.have.property('id');
             expect(res.body.user_name).to.eql(newUser.user_name);
             expect(res.body.full_name).to.eql(newUser.full_name);
             expect(res.headers.location).to.eql(`/api/users/${res.body.id}`);
