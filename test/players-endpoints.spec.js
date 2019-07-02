@@ -6,7 +6,7 @@ const helpers = require('./test-helpers');
 describe('Players Endpoints', () => {
   let db;
 
-  const { testPlayers, testUsers, testGroups } = helpers.makeThingsFixtures();
+  const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();
 
   before('make knex instance', () => {
     db = knex({

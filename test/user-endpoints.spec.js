@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 describe('User Endpoints', () => {
   let db;
 
-  const { testPlayers, testUsers, testGroups } = helpers.makeThingsFixtures();
+  const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();
 
   before('create knex instance', () => {
     db = knex({
@@ -48,7 +48,28 @@ describe('User Endpoints', () => {
 
         return supertest(app)
           .get(`/api/users/${user_id}`)
-          .expect(200, testUsers[0]);
+          .expect(200)
+          .expect(res=>{
+            expect(res.body).to.have.property('id');
+            expect(res.body.user_name).to.eql(testUsers[0].user_name);
+            expect(res.body.full_name).to.eql(testUsers[0].full_name); 
+          })
+          .expect(() => {
+            db('even_teams_users')
+              .select('*')
+              .where({ user_name: testUsers[0].user_name })
+              .first()
+              .then(user => {
+                expect(user.user_name).to.eql(testUsers[0].user_name);
+                expect(user.full_name).to.eql(testUsers[0].full_name);
+                expect(user).to.have.property('id');
+                return bcrypt.compare(testUsers[0].password, user.password);
+              })
+              .then(match => {
+                expect(match).to.be.true;
+              });
+          });
+          
       }); //it 200
     }); //context has data
   }); //describe GET path
@@ -189,8 +210,6 @@ describe('User Endpoints', () => {
           .send(newUser)
           .expect(201)
           .expect(res => {
-            console.log(res.body);
-            console.log(res.headers.location);
             expect(res.body).to.have.property('id');
             expect(res.body.user_name).to.eql(newUser.user_name);
             expect(res.body.full_name).to.eql(newUser.full_name);

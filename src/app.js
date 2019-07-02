@@ -7,7 +7,7 @@ const { NODE_ENV } = require('./config');
 const PlayersRouter = require('./players/players-router');
 const GroupsRouter = require('./groups/groups-router');
 const UsersRouter = require('./users/users-router');
-
+const AuthRouter = require('./auth/auth-router');
 const app = express();
 
 const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'dev';
@@ -19,6 +19,7 @@ app.use(helmet());
 app.use('/api/players', PlayersRouter);
 app.use('/api/groups', GroupsRouter);
 app.use('/api/users', UsersRouter);
+app.use('/api/login', AuthRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');

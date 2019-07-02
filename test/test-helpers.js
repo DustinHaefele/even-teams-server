@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 function makePlayersArray() {
   return [
     {
@@ -87,7 +89,7 @@ function makeUsersArray() {
   ];
 }
 
-function makeThingsFixtures() {
+function makeTeamsFixtures() {
   const testUsers = makeUsersArray();
   const testPlayers = makePlayersArray();
   const testGroups = makeGroupsArray();
@@ -105,14 +107,20 @@ function cleanTables(db) {
 }
 
 function seedUsersTable(db, users) {
+  const hashedUsers = users.map(user =>({
+    ...user, 
+    password: bcrypt.hashSync(user.password, 1)
+  }))
   return db('even_teams_users')
-    .insert(users)
+    .insert(hashedUsers)
     .then(() =>
       db.raw('SELECT setval(\'even_teams_users_id_seq\',?)', [
         users[users.length - 1].id
       ])
     );
 }
+
+
 
 function seedPlayersTable(db, players) {
   return db('even_teams_players')
@@ -135,7 +143,7 @@ function seedGroupsTable(db, groups){
 }
 
 module.exports = {
-  makeThingsFixtures,
+  makeTeamsFixtures,
   cleanTables,
   seedGroupsTable,
   seedPlayersTable,
