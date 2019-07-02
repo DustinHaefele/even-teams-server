@@ -115,6 +115,32 @@ describe('User Endpoints', () => {
             });
         }); //it
       }); //forEach
+      const invalidUsers = [
+        {
+          full_name: '',
+          user_name: 'Test Player1',
+          password: 'Password1!'
+        },
+        {
+          full_name: 'test name1',
+          user_name: 'Test Player2',
+          password: ''
+        },
+        {
+          full_name: 'test name2',
+          user_name: '',
+          password: 'Password1!'
+        }
+      ];
+
+      invalidUsers.forEach(user =>{
+        it('responds 400 and All fields required when there is a missing field', ()=>{
+          return supertest(app)
+            .post('/api/users')
+            .send(user)
+            .expect(400, {error: 'All fields must be given a value'});
+        });
+      });
     }); //context has no data
     context('table has data', () => {
       beforeEach('seed users table', () => {

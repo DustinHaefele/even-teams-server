@@ -110,7 +110,25 @@ describe('Groups Endpoints', () => {
           .expect(400, {error:'User does not exist'});
       });
 
+      const invalidGroups = [
+        {
+          user_id: '',
+          group_name: 'Test Group',
+        },
+        {
+          user_id: 1,
+          group_name: '',
+        }
+      ];
 
+      invalidGroups.forEach(group =>{
+        it('responds 400 and All fields required when there is a missing field', ()=>{
+          return supertest(app)
+            .post('/api/groups')
+            .send(group)
+            .expect(400, {error: 'All fields must be given a value'});
+        });
+      });
       
     });//context
     context('happy path',()=>{

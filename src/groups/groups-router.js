@@ -19,6 +19,11 @@ GroupsRouter.route('/')
   .post(jsonBodyParser, (req, res, next) => {
     const {group_name, user_id} = req.body;
     const group = {group_name, user_id};
+
+    if(!group_name || !user_id){
+      return res.status(400).json({error: 'All fields must be given a value'});
+    }
+
     return GroupsService.validateUser(req.app.get('db'), req.body.user_id)
       .then(userExists => {
         if (!userExists) {

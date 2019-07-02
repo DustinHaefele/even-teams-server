@@ -9,6 +9,9 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
   const { user_name, full_name, password } = req.body;
   const user = { user_name, full_name, password };
 
+  if(!user_name || !password || !full_name){
+    return res.status(400).json({error: 'All fields must be given a value'});
+  }
   const passError = UsersService.validatePassword(password);
 
   if (passError) {

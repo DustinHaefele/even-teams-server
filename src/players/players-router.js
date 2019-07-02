@@ -20,6 +20,10 @@ PlayersRouter.route('/')
     const { player_name, player_skill, group_id } = req.body;
     const player = { player_name, player_skill, group_id };
 
+    if(!player_name || !player_skill || !group_id){
+      return res.status(400).json({error: 'All fields must be given a value'});
+    }
+
     return PlayersService.validateGroup(req.app.get('db'), group_id).then(
       groupExists => {
         if (!groupExists) {
