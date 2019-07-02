@@ -2,11 +2,12 @@ const express = require('express');
 const path = require('path');
 const GroupsService = require('./groups-service');
 const GroupsRouter = express.Router();
+const {requireAuth} = require('../middleware/jwt-auth');
 
 const jsonBodyParser = express.json();
 
 GroupsRouter.route('/')
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     return GroupsService.getAllGroups(req.app.get('db'))
       .then(groups => {
         if (groups.length === 0) {
@@ -16,7 +17,7 @@ GroupsRouter.route('/')
       })
       .catch(next);
   })
-  .post(jsonBodyParser, (req, res, next) => {
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const {group_name, user_id} = req.body;
     const group = {group_name, user_id};
 
@@ -44,7 +45,7 @@ GroupsRouter.route('/')
       }).catch(next);
   });
 
-GroupsRouter.route('/:group_id').get((req, res, next) => {
+GroupsRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
   return GroupsService.getGroupsById(req.app.get('db'), req.params.group_id)
     .then(group => {
       if (!group) {
@@ -55,7 +56,7 @@ GroupsRouter.route('/:group_id').get((req, res, next) => {
     .catch(next);
 });
 
-GroupsRouter.route('/users/:user_id').get((req, res, next) => {
+GroupsRouter.route('/users/:user_id').get(requireAuth, (req, res, next) => {
   return GroupsService.getGroupsByUserId(req.app.get('db'), req.params.user_id)
     .then(groups => {
       //May want to return the empty array instead of 400.  Need to think about this a little more.

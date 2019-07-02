@@ -40,6 +40,7 @@ describe('User Endpoints', () => {
         const user_id = 123;
         return supertest(app)
           .get(`/api/users/${user_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(400, { error: 'No user found' });
       }); //it 400
 
@@ -48,6 +49,7 @@ describe('User Endpoints', () => {
 
         return supertest(app)
           .get(`/api/users/${user_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200)
           .expect(res=>{
             expect(res.body).to.have.property('id');
@@ -74,7 +76,18 @@ describe('User Endpoints', () => {
     }); //context has data
   }); //describe GET path
   describe('POST /api/users/', () => {
-    context('table has no data', () => {
+    
+    context('table has data', () => {
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
+
       it('responds 400 and password must be > 8 characters with short password', () => {
         const { user_name, full_name, password } = testUsers[0];
         const newUser = { user_name, full_name, password };
@@ -161,17 +174,6 @@ describe('User Endpoints', () => {
             .send(user)
             .expect(400, {error: 'All fields must be given a value'});
         });
-      });
-    }); //context has no data
-    context('table has data', () => {
-      beforeEach('seed users table', () => {
-        return helpers.seedUsersTable(db, testUsers);
-      });
-      beforeEach('seed groups table', () => {
-        return helpers.seedGroupsTable(db, testGroups);
-      });
-      beforeEach('seed players table', () => {
-        return helpers.seedPlayersTable(db, testPlayers);
       });
 
       it('responds 400 and Username already exists if it does', () => {

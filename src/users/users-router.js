@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const UsersService = require('./users-service');
 const UsersRouter = express.Router();
+const {requireAuth} = require('../middleware/jwt-auth');
+
 
 const jsonBodyParser = express.json();
 
@@ -44,7 +46,7 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
 
 UsersRouter.route('/:user_id')
   //might want to delete this route.
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     UsersService.getUserById(req.app.get('db'), req.params.user_id)
       .then(user => {
         if (!user) {

@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const config = require('../src/config');
+const jwt = require('jsonwebtoken');
 
 function makePlayersArray() {
   return [
@@ -142,10 +144,20 @@ function seedGroupsTable(db, groups){
     });
 }
 
+function makeAuthHeader(user, secret = config.JWT_SECRET) {
+
+  const token = jwt.sign({user_id: user.id}, secret, {
+    subject: user.user_name,
+    algorithm: 'HS256'});
+
+  return `Bearer ${token}`;
+}
+
 module.exports = {
   makeTeamsFixtures,
   cleanTables,
   seedGroupsTable,
   seedPlayersTable,
-  seedUsersTable
+  seedUsersTable,
+  makeAuthHeader
 };

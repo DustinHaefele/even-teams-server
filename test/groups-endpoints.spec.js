@@ -3,7 +3,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Groups Endpoints', () => {
+describe.only('Groups Endpoints', () => {
   let db;
 
   const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();
@@ -36,6 +36,7 @@ describe('Groups Endpoints', () => {
       it('returns all groups', () => {
         return supertest(app)
           .get('/api/groups')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, testGroups);
       }); //it
 
@@ -44,6 +45,7 @@ describe('Groups Endpoints', () => {
         const expectedGroup = testGroups[1];
         return supertest(app)
           .get(`/api/groups/${group_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedGroup);
       }); //it
 
@@ -51,6 +53,7 @@ describe('Groups Endpoints', () => {
         const group_id = 123;
         return supertest(app)
           .get(`/api/groups/${group_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(400, { error: 'No group found' });
       }); //it
     }); //context table has data
@@ -75,6 +78,7 @@ describe('Groups Endpoints', () => {
         );
         return supertest(app)
           .get(`/api/groups/users/${user_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedGroups);
       }); //it 200
 
@@ -83,6 +87,7 @@ describe('Groups Endpoints', () => {
 
         return supertest(app)
           .get(`/api/groups/users/${user_id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(400, { error: 'No groups found' });
       });
     }); //context with data
@@ -106,6 +111,7 @@ describe('Groups Endpoints', () => {
         };
         return supertest(app)
           .post('/api/groups')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(newGroup)
           .expect(400, {error:'User does not exist'});
       });
@@ -125,6 +131,7 @@ describe('Groups Endpoints', () => {
         it('responds 400 and All fields required when there is a missing field', ()=>{
           return supertest(app)
             .post('/api/groups')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
             .send(group)
             .expect(400, {error: 'All fields must be given a value'});
         });
@@ -144,6 +151,7 @@ describe('Groups Endpoints', () => {
 
         return supertest(app)
           .post('/api/groups')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(newGroup)
           .expect(201)
           .expect(res=>{

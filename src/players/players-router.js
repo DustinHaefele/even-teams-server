@@ -1,12 +1,14 @@
 const express = require('express');
 const PlayersService = require('./players-service');
 const path = require('path');
+const { requireAuth } = require('../middleware/jwt-auth');
+
 
 const PlayersRouter = express.Router();
 const jsonBodyParser = express.json();
 
 PlayersRouter.route('/')
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     return PlayersService.getAllPlayers(req.app.get('db'))
       .then(players => {
         if (!players) {
@@ -16,7 +18,7 @@ PlayersRouter.route('/')
       })
       .catch(next);
   })
-  .post(jsonBodyParser, (req, res, next) => {
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { player_name, player_skill, group_id } = req.body;
     const player = { player_name, player_skill, group_id };
 
@@ -44,7 +46,7 @@ PlayersRouter.route('/')
     ).catch(next);
   });
 
-PlayersRouter.route('/:group_id').get((req, res, next) => {
+PlayersRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
   return PlayersService.getPlayersByGroup(
     req.app.get('db'),
     req.params.group_id

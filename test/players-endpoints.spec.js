@@ -35,6 +35,7 @@ describe('Players Endpoints', () => {
     it('gets all players', () => {
       return supertest(app)
         .get('/api/players')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(200, testPlayers);
     }); //it
 
@@ -45,6 +46,7 @@ describe('Players Endpoints', () => {
       );
       return supertest(app)
         .get(`/api/players/${groupId}`)
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(200, expectedPlayers);
     });
 
@@ -52,11 +54,21 @@ describe('Players Endpoints', () => {
       const invalidId = 123;
       return supertest(app)
         .get(`/api/players/${invalidId}`)
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(400, { error: 'No group found' });
     });
   }); //GET describe api/players
   describe('POST /api/players', () => {
     context('POST fails', () => {
+      beforeEach('seed users table', () => {
+        return helpers.seedUsersTable(db, testUsers);
+      });
+      beforeEach('seed groups table', () => {
+        return helpers.seedGroupsTable(db, testGroups);
+      });
+      beforeEach('seed players table', () => {
+        return helpers.seedPlayersTable(db, testPlayers);
+      });
       it("responds 400 and Invalid group if group_id isn't valid", () => {
         const newPlayer = {
           group_id: 123,
@@ -66,6 +78,7 @@ describe('Players Endpoints', () => {
 
         return supertest(app)
           .post('/api/players')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(newPlayer)
           .expect(400, { error: 'Group not found' });
       });
@@ -91,6 +104,7 @@ describe('Players Endpoints', () => {
         it('responds 400 and All fields required when there is a missing field', ()=>{
           return supertest(app)
             .post('/api/players')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
             .send(player)
             .expect(400, {error: 'All fields must be given a value'});
         });
@@ -117,6 +131,7 @@ describe('Players Endpoints', () => {
 
         return supertest(app)
           .post('/api/players')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(newPlayer)
           .expect(201)
           .expect(res => {
