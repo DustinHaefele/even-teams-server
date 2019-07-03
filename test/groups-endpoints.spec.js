@@ -158,7 +158,7 @@ describe.only('Groups Endpoints', () => {
             expect(res.body).to.have.property('id');
             expect(res.body.group_name).to.eql(newGroup.group_name);
             expect(res.body.user_id).to.eql(newGroup.user_id);
-            expect(res.headers.location).to.eql(`/api/groups/${res.body.id}`)
+            expect(res.headers.location).to.eql(`/api/groups/${res.body.id}`);
           })
           .expect(res=>{
             db('even_teams_groups')

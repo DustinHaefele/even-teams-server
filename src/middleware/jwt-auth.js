@@ -24,7 +24,8 @@ function requireAuth(req, res, next) {
         next();
       })
       .catch(err => {
-        console.error(err);
+        // eslint-disable-next-line no-console
+        console.log(err);
         next(err);
       });
   } catch (err) {

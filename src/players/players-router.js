@@ -52,10 +52,7 @@ PlayersRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
     req.params.group_id
   )
     .then(players => {
-      if (players.length === 0) {
-        return res.status(400).json({ error: 'No group found' });
-      }
-      res.json(players);
+      return res.json(players);
     })
     .catch(next);
 });

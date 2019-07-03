@@ -10,7 +10,7 @@ AuthRouter.route('/').post(jsonBodyParser, (req, res, next) => {
 
   if (!user_name || !password) {
     return res.status(400).json({
-      error: `Missing Credentials`
+      error: 'Missing Credentials'
     });
   }
 
@@ -18,18 +18,18 @@ AuthRouter.route('/').post(jsonBodyParser, (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          error: `Invalid Credentials`
+          error: 'Invalid Credentials'
         });
       }
 
       AuthService.verifyPassword(password, user.password).then(match => {
         if (!match) {
           return res.status(401).json({
-            error: `Invalid Credentials`
+            error: 'Invalid Credentials'
           });
         }
         const subject = user.user_name;
-        const payload = {user_id: user.id};
+        const payload = { user_id: user.id };
         res.send({
           authToken: AuthService.createJwt(subject, payload)
         });

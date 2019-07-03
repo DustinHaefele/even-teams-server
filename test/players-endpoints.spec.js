@@ -50,7 +50,7 @@ describe('Players Endpoints', () => {
         .expect(200, expectedPlayers);
     });
 
-    it("returns 400 and no group found if id doesn't exist", () => {
+    it('returns 400 and no group found if id doesn\'t exist', () => {
       const invalidId = 123;
       return supertest(app)
         .get(`/api/players/${invalidId}`)
@@ -69,7 +69,7 @@ describe('Players Endpoints', () => {
       beforeEach('seed players table', () => {
         return helpers.seedPlayersTable(db, testPlayers);
       });
-      it("responds 400 and Invalid group if group_id isn't valid", () => {
+      it('responds 400 and Invalid group if group_id isn\'t valid', () => {
         const newPlayer = {
           group_id: 123,
           player_name: 'Test Player',

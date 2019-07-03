@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const xss = require('xss');
 
+// eslint-disable-next-line no-useless-escape
 const REGEX_PASS = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 
@@ -20,7 +21,7 @@ const UsersService = {
       return 'Password must be less than 73 characters';
     }
     if (password[0] === ' ' || password[password.length - 1] === ' ') {
-      return "Password can't start or end with a space";
+      return 'Password can\'t start or end with a space';
     }
     if (!REGEX_PASS.test(password)) {
       return 'password needs 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 number';

@@ -26,7 +26,6 @@ const GroupsService = {
       .select('*')
       .where({id: user_id})
       .first();
-      // .then(user => !!user);
   }
 };
 
