@@ -55,7 +55,7 @@ describe('Players Endpoints', () => {
       return supertest(app)
         .get(`/api/players/${invalidId}`)
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-        .expect(400, { error: 'No group found' });
+        .expect(200, []);
     });
   }); //GET describe api/players
   describe('POST /api/players', () => {

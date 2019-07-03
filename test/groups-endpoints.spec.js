@@ -3,7 +3,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Groups Endpoints', () => {
+describe('Groups Endpoints', () => {
   let db;
 
   const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();
@@ -82,13 +82,13 @@ describe.only('Groups Endpoints', () => {
           .expect(200, expectedGroups);
       }); //it 200
 
-      it('responds 400 when no groups found', () => {
+      it('responds 200 and an empty array when no groups found', () => {
         const user_id = 123;
 
         return supertest(app)
           .get(`/api/groups/users/${user_id}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(400, { error: 'No groups found' });
+          .expect(200, []);
       });
     }); //context with data
   }); //describe GET user id path
