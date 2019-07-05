@@ -3,7 +3,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Players Endpoints', () => {
+describe.only('Players Endpoints', () => {
   let db;
 
   const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();
@@ -107,6 +107,20 @@ describe('Players Endpoints', () => {
             .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
             .send(player)
             .expect(400, {error: 'All fields must be given a value'});
+        });
+
+        it('responds 401 and you arent authorized to make changes if user doesnt match group owner',()=>{
+          const newPlayer = {
+            group_id: 1,
+            player_name: 'Test Player',
+            player_skill: 4
+          };
+  
+          return supertest(app)
+            .post('/api/players')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[3]))
+            .send(newPlayer)
+            .expect(401, { error: 'You aren\'t authorized to make changes to this group' });
         });
       });
       

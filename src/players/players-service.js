@@ -22,7 +22,7 @@ const playersService = {
       .select('*')
       .where({id: group_id})
       .first()
-      .then(group=>!!group);
+      // .then(group=>!!group);
   }
 
 };

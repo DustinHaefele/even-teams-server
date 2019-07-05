@@ -5,7 +5,7 @@ const app = require('../src/app');
 const helpers = require('./test-helpers');
 const bcrypt = require('bcrypt');
 
-describe.only('User Endpoints', () => {
+describe('User Endpoints', () => {
   let db;
 
   const { testPlayers, testUsers, testGroups } = helpers.makeTeamsFixtures();

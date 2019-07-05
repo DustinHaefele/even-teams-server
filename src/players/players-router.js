@@ -27,9 +27,12 @@ PlayersRouter.route('/')
     }
 
     return PlayersService.validateGroup(req.app.get('db'), group_id).then(
-      groupExists => {
-        if (!groupExists) {
+      group=> {
+        if (!group) {
           return res.status(400).json({ error: 'Group not found' });
+        }
+        if(group.user_id !== req.user.id) {
+          return res.status(401).json({ error: 'You aren\'t authorized to make changes to this group' });
         }
         return PlayersService.insertPlayer(req.app.get('db'), player).then(
           player => {
