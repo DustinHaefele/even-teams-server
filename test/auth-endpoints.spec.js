@@ -76,7 +76,7 @@ describe('Auth Endpoints', () => {
 
       it('responds 200 with a jwt token when valid credentials sent',()=>{
         
-        const expectedToken = jwt.sign({user_id: testUser.id}, config.JWT_SECRET, {subject: testUser.user_name});
+        const expectedToken = jwt.sign({user_id: testUser.id}, config.JWT_SECRET, {subject: testUser.user_name, expiresIn: process.env.JWT_EXPIRY});
 
         
 
