@@ -60,4 +60,15 @@ PlayersRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
     .catch(next);
 });
 
+PlayersRouter.route('/:group_id/:player_id').delete(requireAuth, (req, res, next) => {
+  return PlayersService.getPlayersByGroup(
+    req.app.get('db'),
+    req.params.group_id
+  )
+    .then(players => {
+      return res.json(players);
+    })
+    .catch(next);
+});
+
 module.exports = PlayersRouter;

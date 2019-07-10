@@ -21,9 +21,12 @@ const playersService = {
     return db('even_teams_groups')
       .select('*')
       .where({id: group_id})
-      .first()
-      // .then(group=>!!group);
-  }
+      .first();
+  },
+  // deletePlayerById(db, player_id){
+  //   return db('even_teams_players')
+  //     .delete()
+  // }
 
 };
 
