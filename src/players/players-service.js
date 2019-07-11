@@ -23,10 +23,12 @@ const playersService = {
       .where({id: group_id})
       .first();
   },
-  // deletePlayerById(db, player_id){
-  //   return db('even_teams_players')
-  //     .delete()
-  // }
+
+  deletePlayerById(db, id){
+    return db('even_teams_players')
+      .where({id})
+      .del();
+  },
 
 };
 

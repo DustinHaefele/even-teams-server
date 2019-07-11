@@ -168,4 +168,29 @@ describe('Players Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //Describe POST /api/player
+  describe('Delete /api/players/group_id/player_id', ()=>{
+    beforeEach('seed users table', () => {
+      return helpers.seedUsersTable(db, testUsers);
+    });
+    beforeEach('seed groups table', () => {
+      return helpers.seedGroupsTable(db, testGroups);
+    });
+    beforeEach('seed players table', () => {
+      return helpers.seedPlayersTable(db, testPlayers);
+    });
+    it.only('responds 204 with and deletes the player',()=>{
+      const expected = testPlayers.filter(player => player.id !== 1);
+      return supertest(app)
+        .delete('/api/players/1/1')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .expect(204)
+        .expect(()=>{
+          db('even_teams_players')
+            .select('*')
+            .then(rows=>{
+              expect(rows).to.eql(expected);
+            });
+        });
+    });
+  });//describe delete
 }); //main describe

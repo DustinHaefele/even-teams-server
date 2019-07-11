@@ -3,7 +3,6 @@ const PlayersService = require('./players-service');
 const path = require('path');
 const { requireAuth } = require('../middleware/jwt-auth');
 
-
 const PlayersRouter = express.Router();
 const jsonBodyParser = express.json();
 
@@ -22,17 +21,21 @@ PlayersRouter.route('/')
     const { player_name, player_skill, group_id } = req.body;
     const player = { player_name, player_skill, group_id };
 
-    if(!player_name || !player_skill || !group_id){
-      return res.status(400).json({error: 'All fields must be given a value'});
+    if (!player_name || !player_skill || !group_id) {
+      return res
+        .status(400)
+        .json({ error: 'All fields must be given a value' });
     }
 
-    return PlayersService.validateGroup(req.app.get('db'), group_id).then(
-      group=> {
+    return PlayersService.validateGroup(req.app.get('db'), group_id)
+      .then(group => {
         if (!group) {
           return res.status(400).json({ error: 'Group not found' });
         }
-        if(group.user_id !== req.user.id) {
-          return res.status(401).json({ error: 'You aren\'t authorized to make changes to this group' });
+        if (group.user_id !== req.user.id) {
+          return res.status(401).json({
+            error: "You aren't authorized to make changes to this group"
+          });
         }
         return PlayersService.insertPlayer(req.app.get('db'), player).then(
           player => {
@@ -45,8 +48,8 @@ PlayersRouter.route('/')
               .json(player);
           }
         );
-      }
-    ).catch(next);
+      })
+      .catch(next);
   });
 
 PlayersRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
@@ -60,15 +63,28 @@ PlayersRouter.route('/:group_id').get(requireAuth, (req, res, next) => {
     .catch(next);
 });
 
-// PlayersRouter.route('/:group_id/:player_id').delete(requireAuth, (req, res, next) => {
-//   return PlayersService.getPlayersByGroup(
-//     req.app.get('db'),
-//     req.params.group_id
-//   )
-//     .then(players => {
-//       return res.json(players);
-//     })
-//     .catch(next);
-// });
+PlayersRouter.route('/:group_id/:player_id').delete(
+  requireAuth,
+  (req, res, next) => {
+    return PlayersService.validateGroup(req.app.get('db'), req.params.group_id).then(
+      group => {
+        if (!group) {
+          return res.status(400).json({ error: 'Group not found' });
+        }
+        if (group.user_id !== req.user.id) {
+          return res.status(401).json({
+            error: "You aren't authorized to make changes to this group"
+          });
+        }
+        return PlayersService.deletePlayerById(
+          req.app.get('db'),
+          req.params.player_id
+        )
+          .then(() => {
+            return res.status(204).end();
+          })
+          .catch(next);
+      });
+  });
 
 module.exports = PlayersRouter;
