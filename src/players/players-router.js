@@ -34,7 +34,7 @@ PlayersRouter.route('/')
         }
         if (group.user_id !== req.user.id) {
           return res.status(401).json({
-            error: "You aren't authorized to make changes to this group"
+            error: 'You aren\'t authorized to make changes to this group'
           });
         }
         return PlayersService.insertPlayer(req.app.get('db'), player).then(
@@ -73,7 +73,7 @@ PlayersRouter.route('/:group_id/:player_id').delete(
         }
         if (group.user_id !== req.user.id) {
           return res.status(401).json({
-            error: "You aren't authorized to make changes to this group"
+            error: 'You aren\'t authorized to make changes to this group'
           });
         }
         return PlayersService.deletePlayerById(

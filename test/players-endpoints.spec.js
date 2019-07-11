@@ -178,7 +178,7 @@ describe('Players Endpoints', () => {
     beforeEach('seed players table', () => {
       return helpers.seedPlayersTable(db, testPlayers);
     });
-    it.only('responds 204 with and deletes the player',()=>{
+    it('responds 204 with and deletes the player',()=>{
       const expected = testPlayers.filter(player => player.id !== 1);
       return supertest(app)
         .delete('/api/players/1/1')
