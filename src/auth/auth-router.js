@@ -18,14 +18,14 @@ AuthRouter.route('/').post(jsonBodyParser, (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          error: 'Invalid Credentials'
+          error: 'Invalid Username or Password'
         });
       }
 
       AuthService.verifyPassword(password, user.password).then(match => {
         if (!match) {
           return res.status(401).json({
-            error: 'Invalid Credentials'
+            error: 'Invalid Username or Password'
           });
         }
         const subject = user.user_name;

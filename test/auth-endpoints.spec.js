@@ -60,7 +60,7 @@ describe('Auth Endpoints', () => {
           .post('/api/login')
           .send(fakeUser)
           .expect(401, {
-            error: `Invalid Credentials`
+            error: `Invalid Username or Password`
           });
       });
       it("responds 401 if password isn't valid", () => {
@@ -70,7 +70,7 @@ describe('Auth Endpoints', () => {
           .post('/api/login')
           .send(badPassword)
           .expect(401, {
-            error: `Invalid Credentials`
+            error: `Invalid Username or Password`
           });
       });
 

@@ -8,11 +8,14 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
-    "predeploy": "npm audit",
+    "migrate-production": "postgrator --config postgrator-production-config.js",
+    "predeploy": "npm run migrate-production",
     "deploy": "git push heroku master"
   },
   "keywords": [],
-  "engines": {"node": "11.14.0"},
+  "engines": {
+    "node": "11.14.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,7 +26,7 @@
     "helmet": "^3.18.0",
     "heroku": "^7.26.2",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.18.1",
+    "knex": "^0.19.0",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "pg": "^7.11.0",
@@ -33,7 +36,6 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.1",
     "postgrator-cli": "^3.1.0",
     "supertest": "^4.0.2"
   }
