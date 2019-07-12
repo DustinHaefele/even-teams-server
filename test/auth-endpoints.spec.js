@@ -1,3 +1,5 @@
+/*global supertest*/
+
 const knex = require('knex');
 const helpers = require('./test-helpers');
 const app = require('../src/app');
@@ -37,7 +39,7 @@ describe('Auth Endpoints', () => {
           .post('/api/login')
           .send(missingUser)
           .expect(400, {
-            error: `Missing Credentials`
+            error: 'Missing Credentials'
           });
       });
 
@@ -47,30 +49,30 @@ describe('Auth Endpoints', () => {
           .post('/api/login')
           .send(missingPassword)
           .expect(400, {
-            error: `Missing Credentials`
+            error: 'Missing Credentials'
           });
       });
     });
 
     context('information provided', () => {
-      it("responds 401 if username isn't valid", () => {
+      it('responds 401 if username isn\'t valid', () => {
         const fakeUser = {user_name: 'notauser', password: 'notapassword'}
 
         return supertest(app)
           .post('/api/login')
           .send(fakeUser)
           .expect(401, {
-            error: `Invalid Username or Password`
+            error: 'Invalid Username or Password'
           });
       });
-      it("responds 401 if password isn't valid", () => {
+      it('responds 401 if password isn\'t valid', () => {
         const badPassword = {user_name: testUser.user_name, password: 'notapassword'}
 
         return supertest(app)
           .post('/api/login')
           .send(badPassword)
           .expect(401, {
-            error: `Invalid Username or Password`
+            error: 'Invalid Username or Password'
           });
       });
 
