@@ -71,13 +71,10 @@ When your new project is ready for deployment, add a new Heroku application with
 
 * [Postgresql](https://www.postgresql.org/docs/9.0/) - The database manager used
 * [Express](https://expressjs.com/en/5x/api.html) 
+* [Nodejs](https://nodejs.org/en/)
+* [knex](https://knexjs.org/)
+* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
-
-
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
 ## Authors
 
