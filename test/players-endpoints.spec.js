@@ -204,9 +204,8 @@ describe('Players Endpoints', () => {
       return helpers.seedPlayersTable(db, testPlayers);
     });
     it('responds 204 and updates the player',()=>{
-      const expected = testPlayers.filter(player => player.id === 1);
-      expected.player_skill = 5;
-      expected.player_name = 'Harry Potter';
+
+      const expected = {id: 1, player_name: 'Harry Potter', player_skill: 5, group_id: 1};
 
       const updatedPlayer = {player_name: 'Harry Potter', player_skill: 5};
 
@@ -220,8 +219,7 @@ describe('Players Endpoints', () => {
             .select('*')
             .where({id: 1})
             .then(rows=>{
-              //need to update this expected statement.  Not sure why I am getting an error
-              expect(rows[0]).to.eql(expected[0]);
+              expect(rows[0]).to.eql(expected);
             });
         });
     });//it patch 204
