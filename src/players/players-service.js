@@ -30,6 +30,12 @@ const playersService = {
       .del();
   },
 
+  modifyPlayerById(db, id, newPlayerFields){
+    return db('even_teams_players')
+      .where({id})
+      .update(newPlayerFields);
+  },
+
 };
 
 module.exports = playersService;

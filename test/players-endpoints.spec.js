@@ -193,4 +193,37 @@ describe('Players Endpoints', () => {
         });
     });
   });//describe delete
+  describe.only('Patch /api/players/group_id/player_id', ()=>{
+    beforeEach('seed users table', () => {
+      return helpers.seedUsersTable(db, testUsers);
+    });
+    beforeEach('seed groups table', () => {
+      return helpers.seedGroupsTable(db, testGroups);
+    });
+    beforeEach('seed players table', () => {
+      return helpers.seedPlayersTable(db, testPlayers);
+    });
+    it('responds 204 and updates the player',()=>{
+      const expected = testPlayers.filter(player => player.id === 1);
+      expected.player_skill = 5;
+      expected.player_name = 'Harry Potter';
+
+      const updatedPlayer = {player_name: 'Harry Potter', player_skill: 5};
+
+      return supertest(app)
+        .patch('/api/players/1/1')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(updatedPlayer)
+        .expect(204)
+        .expect(()=>{
+          db('even_teams_players')
+            .select('*')
+            .where({id: 1})
+            .then(rows=>{
+              //need to update this expected statement.  Not sure why I am getting an error
+              expect(rows[0]).to.eql(expected[0]);
+            });
+        });
+    });//it patch 204
+  });//describe patch
 }); //main describe
