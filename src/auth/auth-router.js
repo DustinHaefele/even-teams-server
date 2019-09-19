@@ -8,11 +8,15 @@ const AuthRouter = express.Router();
 AuthRouter.route('/').post(jsonBodyParser, (req, res, next) => {
   const { user_name, password } = req.body;
 
+  
+
   if (!user_name || !password) {
     return res.status(400).json({
       error: 'Missing Credentials'
     });
-  }
+  } 
+  
+
 
   AuthService.getUserWithUserName(req.app.get('db'), user_name)
     .then(user => {

@@ -28,6 +28,8 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
       return UsersService.hashPassword(password).then(hashPass => {
         user.password = hashPass;
 
+        //user.user_name = user.user_name.toLowerCase();
+
         return UsersService.insertUser(req.app.get('db'), user).then(insertedUser => {
           
           if (!insertedUser) {
