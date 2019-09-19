@@ -31,6 +31,9 @@ const UsersService = {
   },
 
   validateUserName(db, user_name) {
+
+    user_name = user_name.toLowerCase();
+
     return db('even_teams_users')
       .where({user_name})
       .first()
@@ -53,6 +56,9 @@ const UsersService = {
   },
 
   insertUser(db, user){
+
+    user.user_name = user.user_name.toLowerCase();
+
     return db('even_teams_users')
       .insert(user)
       .returning('*')

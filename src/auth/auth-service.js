@@ -6,6 +6,9 @@ const config = require('../config');
 
 const AuthService = {
   getUserWithUserName(db, user_name) {
+
+    user_name = user_name.toLowerCase();
+
     return db('even_teams_users')
       .where({ user_name })
       .first();
