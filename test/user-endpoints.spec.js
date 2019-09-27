@@ -204,7 +204,7 @@ describe('User Endpoints', () => {
         const newUser = {
           password: 'ValidPass!1',
           full_name: 'Harry Potter',
-          user_name: 'HarryPotter'
+          user_name: 'harrypotter'
         };
 
         return supertest(app)
@@ -235,7 +235,7 @@ describe('User Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //describe POST path
-  describe.only('GET /api/users/search', () => {
+  describe('GET /api/users/search', () => {
     beforeEach('seed users table', () => {
       return helpers.seedUsersTable(db, testUsers);
     });

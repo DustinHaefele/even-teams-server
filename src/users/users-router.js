@@ -42,7 +42,7 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
     }).catch(next);
 });
 
-UsersRouter.get('/search', (req ,res ,next) => {
+UsersRouter.get('/search', jsonBodyParser, (req ,res ,next) => {
   console.log('search');
    return UsersService.findUser(req.app.get('db'), req.body.searchTerm)
     .then(users => {
