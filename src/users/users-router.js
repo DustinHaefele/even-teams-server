@@ -28,8 +28,6 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
       return UsersService.hashPassword(password).then(hashPass => {
         user.password = hashPass;
 
-        //user.user_name = user.user_name.toLowerCase();
-
         return UsersService.insertUser(req.app.get('db'), user).then(insertedUser => {
           
           if (!insertedUser) {
@@ -47,7 +45,6 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
 });
 
 UsersRouter.route('/:user_id')
-  //might want to delete this route.
   .get(requireAuth, (req, res, next) => {
     UsersService.getUserById(req.app.get('db'), req.params.user_id)
       .then(user => {
@@ -57,6 +54,18 @@ UsersRouter.route('/:user_id')
         res.status(200).json(user);
       })
       .catch(next);
+  });
+
+UsersRouter.route('/search')
+  .get(requireAuth, (req,res,next) => {
+    UsersService.findUser(req.app.get('db'), req.body.searchTerm)
+    .then(users => {
+      if (!users) {
+        return res.status(400).json({ error: 'No user found' });
+      }
+      res.status(200).json(users);
+    })
+    .catch(next);
   });
 
 module.exports = UsersRouter;

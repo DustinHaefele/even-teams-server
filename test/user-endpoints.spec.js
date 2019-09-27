@@ -235,4 +235,10 @@ describe('User Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //describe POST path
+  describe('GET /api/users/search', () => {
+    return supertest(app)
+      .get('/api/users/search')
+      .send(searchTerm)
+      .expect(200)
+  })
 }); //main describe

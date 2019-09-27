@@ -13,6 +13,15 @@ const UsersService = {
       .first();
   },
 
+  findUser(db, searchTerm) {
+    searchTerm = '%'+searchTerm+'%';
+
+    return db('even_teams_users')
+      .select('*')
+      .where('user_name', 'ilike', searchTerm)
+      .returning('*')
+  },
+
   validatePassword(password) {
     if (password.length < 8) {
       return 'Password must be at least 8 characters';
