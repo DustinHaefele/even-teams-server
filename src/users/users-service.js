@@ -9,7 +9,7 @@ const UsersService = {
   getUserById(db, id){
     return db('even_teams_users')
       .select('*')
-      .where({id})
+      .where({ id })
       .first();
   },
 
@@ -35,7 +35,6 @@ const UsersService = {
     if (!REGEX_PASS.test(password)) {
       return 'password needs 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 number';
     }
-
     return null;
   },
 

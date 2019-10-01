@@ -246,7 +246,7 @@ describe('User Endpoints', () => {
       return supertest(app)
         .get('/api/users/search')
         .send(body)
-        .expect(200)
+        .expect(200, )
     });
   }); //describe search
 }); //main describe
