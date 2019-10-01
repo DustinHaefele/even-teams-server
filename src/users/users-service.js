@@ -15,9 +15,9 @@ const UsersService = {
 
   findUser(db, searchTerm) {
     searchTerm = '%'+searchTerm+'%';
-    console.log('find user');
+    console.log('find user', searchTerm);
     return db('even_teams_users')
-      .select('*')
+      .select('user_name', 'full_name', 'id')
       .where('user_name', 'ilike', searchTerm)
       .returning('*')
   },

@@ -235,16 +235,17 @@ describe('User Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //describe POST path
-  describe('GET /api/users/search', () => {
+  describe.only('GET /api/users/search', () => {
     beforeEach('seed users table', () => {
       return helpers.seedUsersTable(db, testUsers);
     });
     //getting unauthorized not sure why
     it('returns 200 and correct users', ()=>{
       const searchTerm = 'test'
+      const body = { searchTerm }
       return supertest(app)
         .get('/api/users/search')
-        .send(searchTerm)
+        .send(body)
         .expect(200)
     });
   }); //describe search

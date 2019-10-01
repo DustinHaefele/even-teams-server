@@ -49,6 +49,7 @@ UsersRouter.get('/search', jsonBodyParser, (req ,res ,next) => {
       if (!users) {
         return res.status(400).json({ error: 'No users found' });
       }
+      console.log(users);
       return res.status(200).json(users);
     })
     .catch(next);
