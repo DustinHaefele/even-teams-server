@@ -42,9 +42,9 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
     }).catch(next);
 });
 
-UsersRouter.get('/search', jsonBodyParser, (req ,res ,next) => {
+UsersRouter.get('/search/user_name', jsonBodyParser, (req ,res ,next) => {
   console.log('search');
-   return UsersService.findUser(req.app.get('db'), req.body.searchTerm)
+   return UsersService.findUserName(req.app.get('db'), req.body.searchTerm)
     .then(users => {
       if (!users) {
         return res.status(400).json({ error: 'No users found' });
@@ -54,6 +54,19 @@ UsersRouter.get('/search', jsonBodyParser, (req ,res ,next) => {
     })
     .catch(next);
   });
+
+  UsersRouter.get('/search/full_name', jsonBodyParser, (req ,res ,next) => {
+    console.log('search');
+     return UsersService.findFullName(req.app.get('db'), req.body.searchTerm)
+      .then(users => {
+        if (!users) {
+          return res.status(400).json({ error: 'No users found' });
+        }
+        console.log(users);
+        return res.status(200).json(users);
+      })
+      .catch(next);
+    });
 
 UsersRouter.route('/:user_id')
   .get(requireAuth, (req, res, next) => {
