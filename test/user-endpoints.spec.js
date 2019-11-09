@@ -204,7 +204,7 @@ describe('User Endpoints', () => {
         const newUser = {
           password: 'ValidPass!1',
           full_name: 'Harry Potter',
-          user_name: 'HarryPotter'
+          user_name: 'harrypotter'
         };
 
         return supertest(app)
@@ -235,4 +235,34 @@ describe('User Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //describe POST path
+  describe('GET /api/users/user_name', () => {
+    beforeEach('seed users table', () => {
+      return helpers.seedUsersTable(db, testUsers);
+    });
+
+    const expected = testUsers.map(user => {return {full_name: user.full_name, user_name: user.user_name, id: user.id}})
+
+    it('returns 200 and correct users', ()=>{
+      const searchTerm = 'test'
+      const body = { searchTerm }
+      return supertest(app)
+        .get('/api/users/user_name')
+        .send(body)
+        .expect(200, expected)
+    });
+  }); //describe search user_name
+  describe('GET /api/users/full_name', () => {
+    beforeEach('seed users table', () => {
+      return helpers.seedUsersTable(db, testUsers);
+    });
+
+    it('returns 200 and correct users', ()=>{
+      const searchTerm = 'Name3'
+      const body = { searchTerm }
+      return supertest(app)
+        .get('/api/users/full_name')
+        .send(body)
+        .expect(200, [{full_name: testUsers[2].full_name, user_name: testUsers[2].user_name, id: testUsers[2].id}]);
+    });
+  }); //describe search full_name
 }); //main describe

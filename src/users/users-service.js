@@ -9,8 +9,25 @@ const UsersService = {
   getUserById(db, id){
     return db('even_teams_users')
       .select('*')
-      .where({id})
+      .where({ id })
       .first();
+  },
+
+  findUserName(db, searchTerm) {
+    searchTerm = '%'+searchTerm+'%';
+    ('find user', searchTerm);
+    return db('even_teams_users')
+      .select('user_name', 'full_name', 'id')
+      .where('user_name', 'ilike', searchTerm)
+      .returning('*')
+  },
+
+  findFullName(db, searchTerm) {
+    searchTerm = '%'+searchTerm+'%';
+    return db('even_teams_users')
+      .select('user_name', 'full_name', 'id')
+      .where('full_name', 'ilike', searchTerm)
+      .returning('*')
   },
 
   validatePassword(password) {
@@ -26,7 +43,6 @@ const UsersService = {
     if (!REGEX_PASS.test(password)) {
       return 'password needs 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 number';
     }
-
     return null;
   },
 

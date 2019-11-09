@@ -8,31 +8,36 @@ function makePlayersArray() {
       id: 1,
       player_name: 'test-name-1',
       player_skill: 1,
-      group_id: 1
+      group_id: 1,
+      user_id: null
     },
     {
       id: 2,
       player_name: 'test-name-2',
       player_skill: 2,
-      group_id: 1
+      group_id: 1,
+      user_id: null
     },
     {
       id: 3,
       player_name: 'test-name-3',
       player_skill: 3,
-      group_id: 1
+      group_id: 1,
+      user_id: null
     },
     {
       id: 4,
       player_name: 'test-name-4',
       player_skill: 4,
-      group_id: 2
+      group_id: 2,
+      user_id: null
     },
     {
       id: 5,
       player_name: 'test-name-5',
       player_skill: 5,
-      group_id: 2
+      group_id: 2,
+      user_id: null
     }
   ];
 }
