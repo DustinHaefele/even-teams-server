@@ -235,7 +235,7 @@ describe('User Endpoints', () => {
       }); //it happy path
     }); //context happy path
   }); //describe POST path
-  describe.only('GET /api/users/search/user_name', () => {
+  describe('GET /api/users/user_name', () => {
     beforeEach('seed users table', () => {
       return helpers.seedUsersTable(db, testUsers);
     });
@@ -246,12 +246,12 @@ describe('User Endpoints', () => {
       const searchTerm = 'test'
       const body = { searchTerm }
       return supertest(app)
-        .get('/api/users/search/user_name')
+        .get('/api/users/user_name')
         .send(body)
         .expect(200, expected)
     });
   }); //describe search user_name
-  describe.only('GET /api/users/search/full_name', () => {
+  describe('GET /api/users/full_name', () => {
     beforeEach('seed users table', () => {
       return helpers.seedUsersTable(db, testUsers);
     });
@@ -260,7 +260,7 @@ describe('User Endpoints', () => {
       const searchTerm = 'Name3'
       const body = { searchTerm }
       return supertest(app)
-        .get('/api/users/search/full_name')
+        .get('/api/users/full_name')
         .send(body)
         .expect(200, [{full_name: testUsers[2].full_name, user_name: testUsers[2].user_name, id: testUsers[2].id}]);
     });

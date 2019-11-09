@@ -42,7 +42,7 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
     }).catch(next);
 });
 
-UsersRouter.get('/search/user_name', jsonBodyParser, (req ,res ,next) => {
+UsersRouter.get('/user_name', jsonBodyParser, (req ,res ,next) => {
    return UsersService.findUserName(req.app.get('db'), req.body.searchTerm)
     .then(users => {
       if (!users) {
@@ -53,7 +53,7 @@ UsersRouter.get('/search/user_name', jsonBodyParser, (req ,res ,next) => {
     .catch(next);
   });
 
-  UsersRouter.get('/search/full_name', jsonBodyParser, (req ,res ,next) => {
+  UsersRouter.get('/full_name', jsonBodyParser, (req ,res ,next) => {
      return UsersService.findFullName(req.app.get('db'), req.body.searchTerm)
       .then(users => {
         if (!users) {
