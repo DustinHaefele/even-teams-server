@@ -15,7 +15,7 @@ const UsersService = {
 
   findUserName(db, searchTerm) {
     searchTerm = '%'+searchTerm+'%';
-    console.log('find user', searchTerm);
+    ('find user', searchTerm);
     return db('even_teams_users')
       .select('user_name', 'full_name', 'id')
       .where('user_name', 'ilike', searchTerm)
@@ -24,7 +24,6 @@ const UsersService = {
 
   findFullName(db, searchTerm) {
     searchTerm = '%'+searchTerm+'%';
-    console.log('find user', searchTerm);
     return db('even_teams_users')
       .select('user_name', 'full_name', 'id')
       .where('full_name', 'ilike', searchTerm)
