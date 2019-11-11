@@ -244,10 +244,8 @@ describe('User Endpoints', () => {
 
     it('returns 200 and correct users', ()=>{
       const searchTerm = 'test'
-      // const body = { searchTerm }
       return supertest(app)
         .get(`/api/users/user_name?searchTerm=${searchTerm}`)
-        // .send(body)
         .expect(200, expected)
     });
   }); //describe search user_name
@@ -258,10 +256,8 @@ describe('User Endpoints', () => {
 
     it('returns 200 and correct users', ()=>{
       const searchTerm = 'Name3'
-       // const body = { searchTerm }
       return supertest(app)
         .get(`/api/users/full_name?searchTerm=${searchTerm}`)
-        // .send(body)
         .expect(200, [{full_name: testUsers[2].full_name, user_name: testUsers[2].user_name, id: testUsers[2].id}]);
     });
   }); //describe search full_name
