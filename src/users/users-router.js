@@ -42,8 +42,8 @@ UsersRouter.post('/', jsonBodyParser, (req, res, next) => {
     }).catch(next);
 });
 
-UsersRouter.get('/user_name', jsonBodyParser, (req ,res ,next) => {
-   return UsersService.findUserName(req.app.get('db'), req.body.searchTerm)
+UsersRouter.get('/user_name', (req ,res ,next) => {
+   return UsersService.findUserName(req.app.get('db'), req.query.searchTerm)
     .then(users => {
       if (!users) {
         return res.status(400).json({ error: 'No users found' });
@@ -54,7 +54,7 @@ UsersRouter.get('/user_name', jsonBodyParser, (req ,res ,next) => {
   });
 
   UsersRouter.get('/full_name', jsonBodyParser, (req ,res ,next) => {
-     return UsersService.findFullName(req.app.get('db'), req.body.searchTerm)
+     return UsersService.findFullName(req.app.get('db'), req.query.searchTerm)
       .then(users => {
         if (!users) {
           return res.status(400).json({ error: 'No users found' });
