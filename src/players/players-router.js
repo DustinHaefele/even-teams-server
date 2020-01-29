@@ -18,8 +18,8 @@ PlayersRouter.route('/')
       .catch(next);
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { player_name, player_skill, group_id } = req.body;
-    const player = { player_name, player_skill, group_id };
+    const { player_name, player_skill, group_id, user_id } = req.body;
+    const player = { player_name, player_skill, group_id, user_id };
 
     if (!player_name || !player_skill || !group_id) {
       return res
