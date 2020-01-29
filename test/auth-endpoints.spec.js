@@ -1,5 +1,4 @@
 /*global supertest*/
-
 const knex = require('knex');
 const helpers = require('./test-helpers');
 const app = require('../src/app');
